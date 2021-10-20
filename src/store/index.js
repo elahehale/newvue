@@ -14,6 +14,19 @@ export default new Vuex.Store({
     focus_index:0,
     validated_index:0,
     message:'1',
+    error_messages:[
+        'شماره همراه معتبر نمیباشد',
+        'کد وارد شده صحیح نمیباشد',
+        'ارتباط با سرور قطع میباشد',
+        'سوال های قبلی تایید نشده است',
+        'پاسخ به سوالات نباید خالی باشد',
+    ],
+    success_messages:[
+      'کد تایید برای شما ارسال شد',
+      'کد شما تایید شد',
+      'ورود مجددتون مبارک',
+
+    ],
     card_datas:[
       {pass:false,focus:true,deactive:false},
       {pass:false,focus:true,deactive:false},
@@ -65,7 +78,8 @@ export default new Vuex.Store({
         console.log(error);
       });
     },
-    check_pin({ commit }, data){
+    check_pin({ commit },data){
+      console.log(data.code)
       let request_data = new FormData();
       request_data.append('phone', this.state.phone_number);
       request_data.append('code', data.code);
@@ -79,7 +93,7 @@ export default new Vuex.Store({
       axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data),response.status);
-        commit('verified')
+        commit('yessssssssssssss verified')
       })
       .catch(function (error) {
         console.log('some error')
