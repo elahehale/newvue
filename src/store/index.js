@@ -14,6 +14,9 @@ export default new Vuex.Store({
     focus_index:0,
     validated_index:0,
     message:'1',
+    show_alert:true,
+    aler_text:'hi',
+    alert_color:'green',
     error_messages:[
         'شماره همراه معتبر نمیباشد',
         'کد وارد شده صحیح نمیباشد',
@@ -44,7 +47,9 @@ export default new Vuex.Store({
     verified(store,data){
         console.log('horray',data)
     },
-
+    set_show_alert (state, active) {
+      state.show_alert = active
+    },
     updateMessage(store,data){
       console.log(data)
     }
@@ -59,6 +64,7 @@ export default new Vuex.Store({
   },
   actions:{
     validate_phone({ commit }, data){
+      let context = this
       this.state.phone_number = data.phone_number;
       let request_data = new FormData();
       request_data.append('phone', this.state.phone_number);
@@ -71,11 +77,24 @@ export default new Vuex.Store({
       axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data),response.status);
+        context.state.alert_text = context.state.success_messages[0]
+        context.state.alert_color = 'green'
+        console.log(context.state.success_messages[0])
+        context.state.show_alert=true
+        console.log('status code', response.status)
         commit('verified')
       })
       .catch(function (error) {
         console.log('some error')
-        console.log(error);
+        console.log(error.response.status);
+        let status = error.response.status;
+        context.state.alert_color= 'red'
+        if (status == 400)
+          context.state.alert_text = context.state.error_messages[0]
+        else
+          context.state.alert_text = context.state.error_messages[2]
+        context.state.show_alert=true
+
       });
     },
     check_pin({ commit },data){
@@ -93,7 +112,7 @@ export default new Vuex.Store({
       axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data),response.status);
-        commit('yessssssssssssss verified')
+        commit('verified')
       })
       .catch(function (error) {
         console.log('some error')

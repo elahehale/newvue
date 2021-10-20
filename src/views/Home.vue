@@ -6,6 +6,11 @@
         <card :index="1" style=" margin:10px;"></card>
         <card :index='2' style=" margin:10px;"></card>
     </div> -->
+    <v-snackbar v-model="show_alert" :timeout="timeout" top rounded="pill" :color="$store.state.alert_color" elevation='0' text>
+      <template >
+        <div style='text-align:center'>{{ $store.state.alert_text }}</div>
+      </template>
+    </v-snackbar>
     <div style="margin:0 auto; width:75%;">
     <VueSlickCarousel v-bind='slickSetting' style='height:500px'>
       <template style='height:500px;'>
@@ -40,27 +45,39 @@
 
 <script>
 import VueSlickCarousel from 'vue-slick-carousel'
-  import 'vue-slick-carousel/dist/vue-slick-carousel.css'
-  // optional style for arrows & dots
-  import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
- 
-import Card from '../components/Card.vue'
-// import PhoneInput from './components/PhoneInput.vue'
-// import EndCard from './components/EndCard.vue'
-// import PinInput from './components/PinInput.vue'
-// import Question from './components/Question.vue'
+import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 
+import Card from '../components/Card.vue'
 
 export default {
   name: 'Home',
   components: {
     Card,VueSlickCarousel 
-    // PhoneInput,
-    // EndCard,
-    // PinInput,
-    // Question,
+
+  },
+  computed:{
+    show_alert: {
+      get () {
+        return this.$store.state.show_alert
+      },
+      set (value) {
+        this.$store.commit('set_show_alert', value)
+      }
+    }
+    ,
+    text(){
+
+      console.log(this.$store.state.alert_text)
+      return this.$store.state.alert_text
+    }
   },
   data: () => ({
+    
+      timeout: 2000,
+      snackbar:true,
+      
+      notification_color:'rgba(146, 237, 76,1)',
      slickSetting:{
   "dots": true,
   "speed": 500,
@@ -98,14 +115,16 @@ export default {
   ]
 }
   }),
-  
+  methods:{
+  }
   
 }
 </script>
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Yekan;
+  text-align:center !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
