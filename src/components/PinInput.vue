@@ -8,7 +8,7 @@
             <input type='text' class='form-control pin' maxlength='1'  >
             <input type='text' class='form-control pin' maxlength='1'  >
         </div>
-        <div class='verify-btn pin-btn' >
+        <div class='verify-btn pin-btn' @click='sendCode'>
             <svg height='25' width='28'>
                 <polyline points='1.5,11 10,20 27.5,3.5' class='verify-icon' />
             </svg>
@@ -19,6 +19,12 @@
 export default {
   name: 'PinInput',
   props: {
+  }
+  ,
+  methods:{
+      sendCode(){
+          
+      }
   }
 }
 </script>

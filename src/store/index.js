@@ -1,14 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-Vue.use(Vuex)
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+Vue.use(Vuex,axios,VueAxios)
 
 export default new Vuex.Store({
   state: {
+    phone_number:'09121487633',
     count:0,
+    base_url:"http://localhost:8000/api/",
     start_index:0,
     question_num:3,
     focus_index:0,
+    validated_index:0,
     message:'1',
     card_datas:[
       {pass:false,focus:true,deactive:false},
@@ -24,6 +28,10 @@ export default new Vuex.Store({
     Start_Index_Increment(store,data){
       store.start_index= (store.start_index + data)%(store.question_num + 3)
     },
+    verified(store,data){
+        console.log('horray',data)
+    },
+
     updateMessage(store,data){
       console.log(data)
     }
@@ -35,6 +43,50 @@ export default new Vuex.Store({
     getQuestionByIndex: (state) => (index)=> {
       return state.card_datas[index]
     }
+  },
+  actions:{
+    validate_phone({ commit }, data){
+      this.state.phone_number = data.phone_number;
+      let request_data = new FormData();
+      request_data.append('phone', this.state.phone_number);
+      let config = {
+        method: 'post',
+        url: this.state.base_url + "auth/sign/",
+        data : request_data
+      };
+      console.log(request_data)
+      axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data),response.status);
+        commit('verified')
+      })
+      .catch(function (error) {
+        console.log('some error')
+        console.log(error);
+      });
+    },
+    check_pin({ commit }, data){
+      let request_data = new FormData();
+      request_data.append('phone', this.state.phone_number);
+      request_data.append('code', data.code);
+
+      let config = {
+        method: 'post',
+        url: this.state.base_url + "auth/sign/verify/",
+        data : request_data
+      };
+      console.log(request_data)
+      axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data),response.status);
+        commit('verified')
+      })
+      .catch(function (error) {
+        console.log('some error')
+        console.log(error);
+      });
+    },
+
   },
   modules: {
   }

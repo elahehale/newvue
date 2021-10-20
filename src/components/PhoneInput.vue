@@ -1,9 +1,9 @@
 <template>
     <div class='text'>
         <h2 class='question'>لطفا برای تایید هویت، شماره همراه خود را وارد کنید:</h2>
-        <input class='phone-input' type='text' maxlength='11'  >
+        <input class='phone-input' type='text' maxlength='11'  v-model="phone">
         <div class='verify-btn phone-btn'>
-            <svg height='25' width='28' @click='check'>
+            <svg height='25' width='28' @click='validate_phone'>
                 <polyline points='1.5,11 10,20 27.5,3.5' class='verify-icon' />
             </svg>
         </div>
@@ -13,11 +13,17 @@
 <script>
 export default {
   name: 'PhoneInput',
+  data: () => ({
+      phone:'',
+  }),
   props: {
   },
   methods:{
       check(){
         console.log(this.$store.state.card_datas[2])
+      },
+      validate_phone(){
+          this.$store.dispatch('validate_phone',{'phone_number':this.phone})
       }
   }
 }

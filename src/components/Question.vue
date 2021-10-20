@@ -2,12 +2,10 @@
     <div>
         <div class='text'  >
             <h2 class='question'  >
-                <!-- {{questions[index].question}} -->
-                <!-- {{questions[index].question}} -->
                 {{question.question}}
-                {{index}}
             </h2>
-            <textarea type='text' class='answer-input' placeholder='پاسخ را وارد کنید' v-model='answer' @input='setAnswer'></textarea>
+            <textarea type='text' class='answer-input' :disabled='checkDisabled'
+            placeholder='پاسخ را وارد کنید' v-model='answer' @input='setAnswer'></textarea>
         </div>
         <div class='verify-btn'>
             <svg height="25" width="28">
@@ -44,7 +42,13 @@ return {
           }
   },
   methods:{
-      setAnswer(){
+      checkDisabled(){
+          if( this.index > this.$store.state.focus_index)
+           return 1
+           else
+           return 0 
+      },
+  setAnswer(){
           console.log(this.answer)
 
       }

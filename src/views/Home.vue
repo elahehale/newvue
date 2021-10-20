@@ -27,9 +27,10 @@
         <img alt="Vue logo" src="../assets/logo.png" style="width:20px;">
         </div>
     </template>
-    <template #customPaging >
+    <!-- <template #customPaging > -->
+    <template #customPaging='page' >
         <div class='dots'>
-          <!-- {{page}} -->
+        {{4- page}}
         </div>
     </template>
     </VueSlickCarousel>
@@ -66,7 +67,7 @@ export default {
   "slidesToShow": 3,
   "slidesToScroll": 1,
   "touchThreshold": 5,
-  "rtl":true,
+  // "rtl":true,
   "infinite": false,
 
 

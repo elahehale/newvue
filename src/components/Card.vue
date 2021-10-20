@@ -2,7 +2,7 @@
     <div class='container' v-bind:class="{ passed: index < $store.state.focus_index,
                                            onFocus: index == $store.state.focus_index,
                                            deactive: index > $store.state.focus_index                   }">
-        <end-card v-if='index == $store.state.question_num'></end-card>
+        <end-card v-if='index == $store.state.question_num +2'></end-card>
         <phone-input v-else-if='index == 0'></phone-input>
         <pin-input v-else-if='index == 1'></pin-input>
         <question v-else :index='index'></question>
