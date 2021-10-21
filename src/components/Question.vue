@@ -38,7 +38,7 @@ return {
         }
         ,
       question : function (){
-          return this.$store.getters.getQuestionByIndex(2)
+          return this.$store.getters.getQuestionByIndex(this.index)
           }
   },
   methods:{

@@ -8,17 +8,22 @@
             <input type='text' class='form-control pin' maxlength='1'  >
             <input type='text' class='form-control pin' maxlength='1'  >
         </div> -->
-        <div class='verify-btn pin-btn' @click='sendCode'>
-            <svg height='25' width='28'>
-                <polyline points='1.5,11 10,20 27.5,3.5' class='verify-icon' />
-            </svg>
-        </div>
+        
         <div>
             <PincodeInput
                 v-model="code"
                 placeholder=""
                 length='5'
             />
+        </div>
+        <div style="position:relative ; margin-top:10px;">
+            <v-progress-circular :size='65' indeterminate='true' color="white" :width="4" class='loader' v-if='$store.state.pin_in_progress'>
+            </v-progress-circular> 
+            <div class='verify-btn pin-btn btn' @click='sendCode'>
+                <svg height='25' width='28'>
+                    <polyline points='1.5,11 10,20 27.5,3.5' class='verify-icon' />
+                </svg>
+            </div>
         </div>
 
 
@@ -85,7 +90,18 @@ export default {
         background-color: #F3F3F3 !important;
 
     }
-
+.loader{
+        position: absolute;
+        z-index: 0;
+        margin:0 auto;
+        left:87px;
+        top:-10px;
+    }
+    .btn{
+        z-index: 5000;
+        position: relative;
+        margin:0 auto;
+    }
 
     .new-style {
    font-family:Yekan-light;

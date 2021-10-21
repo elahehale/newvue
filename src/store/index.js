@@ -17,6 +17,9 @@ export default new Vuex.Store({
     show_alert:true,
     aler_text:'hi',
     alert_color:'green',
+
+    phone_validation_in_progress:false,
+    pin_in_progress:false,
     error_messages:[
         'شماره همراه معتبر نمیباشد',
         'کد وارد شده صحیح نمیباشد',
@@ -41,11 +44,18 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    phone_validation_progress(store,data){
+      store.phone_validation_in_progress = data
+    },
+    pin_progress(store,data){
+      store.pin_in_progress = data
+    },
     Start_Index_Increment(store,data){
       store.start_index= (store.start_index + data)%(store.question_num + 3)
     },
     verified(store,data){
         console.log('horray',data)
+        store.focus_index++
     },
     set_show_alert (state, active) {
       state.show_alert = active
@@ -65,6 +75,7 @@ export default new Vuex.Store({
   actions:{
     validate_phone({ commit }, data){
       let context = this
+      commit('phone_validation_progress',true)
       this.state.phone_number = data.phone_number;
       let request_data = new FormData();
       request_data.append('phone', this.state.phone_number);
@@ -75,34 +86,35 @@ export default new Vuex.Store({
       };
       console.log(request_data)
       axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data),response.status);
+      .then(function () {
         context.state.alert_text = context.state.success_messages[0]
         context.state.alert_color = 'green'
-        console.log(context.state.success_messages[0])
         context.state.show_alert=true
-        console.log('status code', response.status)
+        context.focus_index= context.focus_index + 1
+        console.log(context.focus_index)
+        commit('phone_validation_progress',false)
         commit('verified')
       })
       .catch(function (error) {
-        console.log('some error')
-        console.log(error.response.status);
-        let status = error.response.status;
+        commit('phone_validation_progress',false)
+        let stat = error.response.status;
         context.state.alert_color= 'red'
-        if (status == 400)
+        if (stat == 400)
           context.state.alert_text = context.state.error_messages[0]
         else
           context.state.alert_text = context.state.error_messages[2]
         context.state.show_alert=true
 
+
       });
     },
     check_pin({ commit },data){
+      let context = this
       console.log(data.code)
       let request_data = new FormData();
       request_data.append('phone', this.state.phone_number);
       request_data.append('code', data.code);
-
+      commit('pin_progress',true)
       let config = {
         method: 'post',
         url: this.state.base_url + "auth/sign/verify/",
@@ -110,13 +122,28 @@ export default new Vuex.Store({
       };
       console.log(request_data)
       axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data),response.status);
+      .then(function () {
+        context.state.alert_text = context.state.success_messages[1]
+        context.state.alert_color = 'green'
+        context.state.show_alert=true        
+        context.focus_index= context.focus_index + 1
+        console.log(context.focus_index)
+      commit('pin_progress',false)
+
+
         commit('verified')
       })
       .catch(function (error) {
-        console.log('some error')
-        console.log(error);
+      commit('pin_progress',false)
+
+        let stat = error.response.status;
+        context.state.alert_color= 'red'
+        if (stat == 400)
+          context.state.alert_text = context.state.error_messages[1]
+        else
+          context.state.alert_text = context.state.error_messages[2]
+        context.state.show_alert=true
+
       });
     },
 
