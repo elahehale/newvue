@@ -17,7 +17,7 @@
     <v-row>
     <v-col md='9'>
       <v-container >
-    <VueSlickCarousel v-bind='slickSetting' style='height:500px' ref="carousel">
+    <VueSlickCarousel v-bind='slickSetting' style='height:500px' ref="carousel" @beforeChange='slide_change'>
       <template style='height:500px;'>
       <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
       <div class='scroll-item'><card :index="1" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
@@ -26,24 +26,43 @@
       <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>      
     
     </template>
+    <!-- <template style='height:500px;'>
+      <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
+      <div class='scroll-item'><card :index="1" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
+      <div v-for='(question,index) in $store.state.questions' class='scroll-item' :key="index"><card :index="index + 2" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
+      <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>      
+    </template> -->
     <template #prevArrow >
-        <div style='align:left; position:reltive;'>
+        <div style='align:left; position:reltive;' >
           <v-icon  large color="gray darken-2"  > mdi-arrow-left </v-icon>
         </div>
     </template>
     <template #nextArrow >
-        <div style='align:left; position:reltive;'>
+        <div style='align:left; position:reltive;' >
           <v-icon  large color="gray darken-2"  > mdi-arrow-right </v-icon>
         </div>
     </template>
     <!-- <template #customPaging > -->
-    <template #customPaging='page' >
+    <!-- <template #customPaging='page' >
         <div class='dots'>
         {{4- page}}
         </div>
-    </template>
+    </template> -->
     </VueSlickCarousel>
       </v-container>
+      
+      <div class='d-flex justify-center '>
+        <div class=" number-container " v-for="index in 5"  :key="index" @click='change_slide(index)'>
+              <div class='dots' v-bind:class="{ green: index -1 < $store.state.focus_index,
+                                           red: index-1 == $store.state.focus_index,
+                                           gray: index-1 > $store.state.focus_index,
+                                           large: index-1 == clicked }">
+              </div>
+              <div  class='btn-title' >
+                {{ texts[index -1] }}
+              </div>
+      </div>
+      </div>
     </v-col>
     <v-col md='3'>
       <h3>انتخاب تو چیه؟</h3>
@@ -83,6 +102,9 @@ export default {
 
       console.log(this.$store.state.alert_text)
       return this.$store.state.alert_text
+    },
+    questions(){
+      return this.$store.state.questions
     }
   },
   mounted(){
@@ -90,9 +112,22 @@ export default {
 
   },
   methods:{
+    
     donext(){
       console.log('hi')
+      this.clicked++
       this.$refs.carousel.next()
+    },
+    change_slide(index){
+      if (index < 4)
+      this.$refs.carousel.goTo(index -1)
+      else
+      this.$refs.carousel.goTo(2)
+
+
+    },
+    slide_change(old,notold){
+      this.clicked = notold
     },
     logOut(){
       this.$store.commit('reset')
@@ -100,13 +135,19 @@ export default {
     }
   },
   data: () => ({
-    
+      clicked:0,
       timeout: 2000,
       snackbar:true,
-      
+      texts: [
+        'تایید هویت',
+        'کد امنیتی',
+        'سوال اول',
+        'سوال دوم',
+        'تایید و ارسال',
+      ],
       notification_color:'rgba(146, 237, 76,1)',
      slickSetting:{
-  "dots": true,
+  "dots": false,
   "speed": 500,
   "slidesToShow": 3,
   "slidesToScroll": 1,
@@ -121,7 +162,6 @@ export default {
       "settings": {
         "slidesToShow": 2,
         "slidesToScroll": 1,
-        "dots": true
       }
     },
     {
@@ -146,7 +186,39 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" >
+.large{
+  transform: scale(1.5);
+}
+.green{
+  border:solid green 2px;
+  box-shadow:0 0 0px 2px  white inset;
+  background-color:green;
+}
+.red{
+  border:solid red 2px;
+  box-shadow:0 0 0px 2px white inset;
+  background-color:red;
+}
+.gray{
+  border:solid gray 2px;
+  box-shadow:0 0 0px 2px  white inset;
+  background-color:white;
+}
+.btn-title {
+  width: 100px;
+  transform: rotate(-90deg);
+  cursor: default;
+  position: relative;
+    left: -25px;
+    top: 40px;
+
+}
+.number-container {
+  cursor: pointer;
+  width: 50px;
+  height: 200px;
+}
 #app {
   font-family: Yekan;
   text-align:center !important;
