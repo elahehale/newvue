@@ -19,7 +19,6 @@
       <div class='scroll-item'><card :index='2' style="text-align:center; margin:0 auto;"></card></div>
       <div class='scroll-item'><card :index='3' style="text-align:center; margin:0 auto;"></card></div>
       <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;"></card></div>      
-      <div class='scroll-item'><card :index='5' style="text-align:center; margin:0 auto;"></card></div>
     
     </template>
     <template #prevArrow >
@@ -71,6 +70,10 @@ export default {
       console.log(this.$store.state.alert_text)
       return this.$store.state.alert_text
     }
+  },
+  mounted(){
+          this.$store.dispatch('fetch_poll_by_pk')
+
   },
   data: () => ({
     

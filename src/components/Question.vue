@@ -2,7 +2,7 @@
     <div>
         <div class='text'  >
             <h2 class='question'  >
-                {{question.question}}
+                {{question.text}}
             </h2>
             <textarea type='text' class='answer-input' :disabled='checkDisabled'
             placeholder='پاسخ را وارد کنید' v-model='answer' @input='setAnswer'></textarea>
@@ -38,7 +38,7 @@ return {
         }
         ,
       question : function (){
-          return this.$store.getters.getQuestionByIndex(this.index)
+          return this.$store.getters.getQuestionByIndex(this.index )
           }
   },
   methods:{

@@ -10,7 +10,8 @@ export default new Vuex.Store({
     count:0,
     base_url:"http://localhost:8000/api/",
     start_index:0,
-    question_num:3,
+    question_num:2,
+    token: localStorage.getItem('token') || '',
     focus_index:0,
     validated_index:0,
     message:'1',
@@ -33,14 +34,15 @@ export default new Vuex.Store({
       'ورود مجددتون مبارک',
 
     ],
-    card_datas:[
-      {pass:false,focus:true,deactive:false},
-      {pass:false,focus:true,deactive:false},
-      {question : 'first question',answer:'',pk:'1',pass:false,focus:true,deactive:false,index:1},
-      {question : 'second question',answer:'',pk:'2',pass:false,focus:true,deactive:false,index:2},
-      {question : 'third question',answer:'',pk:'3',pass:false,focus:true,deactive:false,index:3},
-      {pass:false,focus:true,deactive:false},
-    ]
+    questions:[],
+    // card_datas:[
+    //   {pass:false,focus:true,deactive:false},
+    //   {pass:false,focus:true,deactive:false},
+    //   {pass:false,focus:true,deactive:false,},
+    //   {pass:false,focus:true,deactive:false,},
+    //   {pass:false,focus:true,deactive:false,},
+    //   {pass:false,focus:true,deactive:false},
+    // ]
   },
 
   mutations: {
@@ -69,12 +71,13 @@ export default new Vuex.Store({
       return state.card_datas
   },
     getQuestionByIndex: (state) => (index)=> {
-      return state.card_datas[index]
+      return state.questions[index -2 ]
     }
   },
   actions:{
     validate_phone({ commit }, data){
       let context = this
+      console.log(localStorage.getItem('token'),'token')
       commit('phone_validation_progress',true)
       this.state.phone_number = data.phone_number;
       let request_data = new FormData();
@@ -108,6 +111,26 @@ export default new Vuex.Store({
 
       });
     },
+    fetch_poll_by_pk({commit}){
+      let context = this
+      var config = {
+        method: 'get',
+        url: this.state.base_url + "polls/fetch/1/",
+        headers: { 
+          'Authorization': 'token ' + localStorage.getItem('token'),
+        }
+      };
+      
+      axios(config)
+      .then(function (response) {
+        context.state.questions = response.data.questions
+        commit('updateMessage')
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
     check_pin({ commit },data){
       let context = this
       console.log(data.code)
@@ -122,12 +145,16 @@ export default new Vuex.Store({
       };
       console.log(request_data)
       axios(config)
-      .then(function () {
+      .then(function (response) {
         context.state.alert_text = context.state.success_messages[1]
         context.state.alert_color = 'green'
         context.state.show_alert=true        
         context.focus_index= context.focus_index + 1
         console.log(context.focus_index)
+        let token = response.data.token
+        console.log(token,'token')
+        localStorage.setItem('token', token)
+
       commit('pin_progress',false)
 
 
