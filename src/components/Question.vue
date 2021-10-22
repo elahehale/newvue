@@ -4,10 +4,10 @@
             <h2 class='question'  >
                 {{question.text}}
             </h2>
-            <textarea type='text' class='answer-input' :disabled='checkDisabled'
-            placeholder='پاسخ را وارد کنید' v-model='answer' @input='setAnswer'></textarea>
+            <textarea type='text' class='answer-input' :disabled="index >$store.state.focus_index" value="question.answer"
+            placeholder='پاسخ را وارد کنید' v-model='question.answer'></textarea>
         </div>
-        <div class='verify-btn'>
+        <div class='verify-btn' @click="sendAnswer">
             <svg height="25" width="28">
                 <polyline points="1.5,11 10,20 27.5,3.5" class='verify-icon' />
             </svg>
@@ -19,42 +19,46 @@ export default {
   name: 'EndCard',
   props: ['index'],
   data:function(){
+
 return {
+    answer:'',
     counter: this.index
   }
   },
   computed:{
-        answer: {
-            get () {
-            return this.$store.state.message
-            },
-            set (value) {
-                console.log( this.counter)
-                value = {'index':this.$props.index,'value':value}
-                console.log(typeof value)
+        // answer: {
+        //     get () {
+        //     return this.$store.state.message
+        //     },
+        //     set (value) {
+        //         console.log( this.counter)
+        //         value = {'index':this.$props.index,'value':value}
+        //         console.log(typeof value)
 
-                this.$store.commit('updateMessage', value)
-            }
-        }
-        ,
+        //         this.$store.commit('updateMessage', value)
+        //     }
+        // }
+        // ,
       question : function (){
-          return this.$store.getters.getQuestionByIndex(this.index )
-          }
+          
+          return  this.$store.getters.getQuestionByIndex(this.index )
+
+          
+          },
   },
   methods:{
-      checkDisabled(){
-          if( this.index > this.$store.state.focus_index)
-           return 1
-           else
-           return 0 
+      sendAnswer(){
+          console.log(this.question)
+          this.$store.dispatch('answer',{'pk':this.question.id , 'answer' : this.question.answer})
       },
   setAnswer(){
-          console.log(this.answer)
+          console.log(this.answer,'answerrr')
+          this.answer = this.question.answer
 
       }
   },
   mounted(){
-      console.log(this.$store.getters.getQuestionByIndex(this.index));
+    //   this.setAnswer()
   }
 }
 </script>

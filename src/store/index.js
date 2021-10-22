@@ -46,6 +46,9 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    answerr(){
+console.log('hi')
+    },
     phone_validation_progress(store,data){
       store.phone_validation_in_progress = data
     },
@@ -57,7 +60,8 @@ export default new Vuex.Store({
     },
     verified(store,data){
         console.log('horray',data)
-        store.focus_index++
+        store.focus_index = store.focus_index + 1
+        console.log('index increaminent',store.focus_index)
     },
     set_show_alert (state, active) {
       state.show_alert = active
@@ -130,6 +134,32 @@ export default new Vuex.Store({
       .catch(function (error) {
         console.log(error);
       });
+    },
+    answer({commit},data){
+      console.log(data)
+      var request_data = JSON.stringify({
+        "answer": data.answer
+      });
+      
+      var config = {
+        method: 'put',
+        url: 'http://localhost:8000/api/polls/answer/' + data.pk + '/',
+        headers: { 
+          'Authorization': 'token ' + localStorage.getItem('token'), 
+          'Content-Type': 'application/json'
+        },
+        data : request_data
+      };
+      axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        commit('answerr')
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      
+
     },
     check_pin({ commit },data){
       let context = this

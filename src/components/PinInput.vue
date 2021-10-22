@@ -13,7 +13,7 @@
             <PincodeInput
                 v-model="code"
                 placeholder=""
-                length='5'
+                :length="5"
             />
         </div>
         <div style="position:relative ; margin-top:10px;">
