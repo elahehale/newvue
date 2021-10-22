@@ -10,27 +10,27 @@
         </div> -->
         
         <div>
-            <PincodeInput
+            <!-- <PincodeInput
                 v-model="code"
                 placeholder=""
                 :length="5"
-            />
+            /> -->
+            <input class='pin' type='text' maxlength='5'  v-model="code" :disabled="$store.state.focus_index > 1"
+            v-bind:class="{passed: $store.state.focus_index > 1}">
+
         </div>
         <div style="position:relative ; margin-top:10px;">
             <v-progress-circular :size='65' indeterminate='true' color="white" :width="4" class='loader' v-if='$store.state.pin_in_progress'>
             </v-progress-circular> 
-            <div class='verify-btn pin-btn btn' @click='sendCode'>
-                <svg height='25' width='28'>
-                    <polyline points='1.5,11 10,20 27.5,3.5' class='verify-icon' />
-                </svg>
-            </div>
+            <v-btn  fab small color='white' @click="sendCode" v-if="1 === $store.state.focus_index"><v-icon dark>mdi-check</v-icon></v-btn>
+
         </div>
 
 
     </div>
 </template>
 <script>
-import PincodeInput from 'vue-pincode-input';
+// import PincodeInput from 'vue-pincode-input';
 
 export default {
   name: 'PinInput',
@@ -41,7 +41,7 @@ export default {
       this.setStyle()
   },
   components:{
-      PincodeInput,
+    //   PincodeInput,
   },
   data: () => ({
       code:'',
@@ -94,15 +94,17 @@ export default {
         position: absolute;
         z-index: 0;
         margin:0 auto;
-        left:87px;
-        top:-10px;
+        left:75px;
+        top:-13px;
     }
     .btn{
         z-index: 5000;
         position: relative;
         margin:0 auto;
     }
-
+.passed{
+        color:green;
+    }
     .new-style {
    font-family:Yekan-light;
     color:rgb(30,30,30);
@@ -125,7 +127,7 @@ input:focus{
         border-radius:15px !important;
         border: none; 
         text-align: center; 
-        width: 45px;
+        width: 160px;
         height:45px;
         font-size: 25px; 
         background-color: #F3F3F3;

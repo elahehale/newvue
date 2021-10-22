@@ -1,15 +1,14 @@
 <template>
     <div class='text'>
         <h2 class='question'>لطفا برای تایید هویت، شماره همراه خود را وارد کنید:</h2>
-        <input class='phone-input' type='text' maxlength='11'  v-model="phone">
+        <input class='phone-input' type='text' maxlength='11'  v-model="$store.state.phone_number"
+        :disabled="$store.state.focus_index > 1"  v-bind:class="{passed: $store.state.focus_index > 1}">
         <div style="position:relative ; margin-top:10px;">
             <v-progress-circular :size='65' indeterminate='true' color="white" :width="4" class='loader' v-if='$store.state.phone_validation_in_progress'>
+            
             </v-progress-circular> 
-            <div class='verify-btn phone-btn btn'>
-                <svg height='25' width='28' @click='validate_phone'>
-                    <polyline points='1.5,11 10,20 27.5,3.5' class='verify-icon' />
-                </svg>
-            </div>
+            <v-btn  fab small color='white' @click="validate_phone" v-if="0 === $store.state.focus_index"><v-icon dark>mdi-check</v-icon></v-btn>
+
             </div>
        
         <h3 class = 'timer-text' >بعد از ثانیه برای دریافت دوباره کد</h3>
@@ -19,7 +18,7 @@
 export default {
   name: 'PhoneInput',
   data: () => ({
-      phone:'',
+      phone: '',
       loading:false,
   }),
   props: {
@@ -29,7 +28,7 @@ export default {
         console.log(this.$store.state.card_datas[2])
       },
       validate_phone(){
-          this.$store.dispatch('validate_phone',{'phone_number':this.phone})
+          this.$store.dispatch('validate_phone')
           this.loading=true;
       }
   }
@@ -58,8 +57,8 @@ export default {
         position: absolute;
         z-index: 0;
         margin:0 auto;
-        left:87px;
-        top:-10px;
+        left:75px;
+        top:-13px;
     }
     .btn{
         z-index: 5000;
@@ -130,5 +129,8 @@ export default {
         padding:8px;
         padding-top:10px;
         transition:transform 0.25s;
+    }
+    .passed{
+        color:green;
     }
 </style>

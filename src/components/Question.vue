@@ -5,13 +5,9 @@
                 {{question.text}}
             </h2>
             <textarea type='text' class='answer-input' :disabled="index >$store.state.focus_index" value="question.answer"
-            placeholder='پاسخ را وارد کنید' v-model='question.answer'></textarea>
+            placeholder='پاسخ را وارد کنید' v-model='question.answer' @click='change_focus'></textarea>
         </div>
-        <div class='verify-btn' @click="sendAnswer">
-            <svg height="25" width="28">
-                <polyline points="1.5,11 10,20 27.5,3.5" class='verify-icon' />
-            </svg>
-        </div>
+        <v-btn  fab small color='white' @click="sendAnswer" v-if="index === $store.state.focus_index"><v-icon dark>mdi-check</v-icon></v-btn>
     </div>
 </template>
 <script>
@@ -55,6 +51,10 @@ return {
           console.log(this.answer,'answerrr')
           this.answer = this.question.answer
 
+      },
+      change_focus(){
+          if (this.index<= this.$store.state.focus_index)
+          this.$store.state.focus_index = this.index
       }
   },
   mounted(){

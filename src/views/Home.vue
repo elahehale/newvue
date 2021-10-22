@@ -8,11 +8,11 @@
       </template>
     </v-snackbar>
 
-
-    <v-btn @click='logOut'>click for refresh</v-btn>
     <v-container>
-    <v-row justify-md='end' justify='center'>
-     <img alt="Vue logo" src="../assets/logo.png" class='logo_image'>
+    <v-row  justify='space-between'>
+      <v-btn style="margin-top:10px;" icon x-large color='#FE0B6C' @click="logOut"><v-icon large dark>mdi-logout-variant</v-icon></v-btn>
+      <img alt="Vue logo" src="../assets/logo.png" class='logo_image'>
+
     </v-row>
     <v-row>
     <v-col md='9'>

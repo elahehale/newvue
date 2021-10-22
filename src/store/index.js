@@ -6,7 +6,7 @@ Vue.use(Vuex,axios,VueAxios)
 
 export default new Vuex.Store({
   state: {
-    phone_number:'09121487633',
+    phone_number:'',
     count:0,
     base_url:"http://localhost:8000/api/",
     start_index:0,
@@ -26,12 +26,13 @@ export default new Vuex.Store({
         'کد وارد شده صحیح نمیباشد',
         'ارتباط با سرور قطع میباشد',
         'سوال های قبلی تایید نشده است',
-        'پاسخ به سوالات نباید خالی باشد',
+        'پاسخ شما ثبت نشدودقت کنید پاسخ خالی نباشد',
     ],
     success_messages:[
       'کد تایید برای شما ارسال شد',
       'کد شما تایید شد',
       'ورود مجددتون مبارک',
+      'جواب شما به این سوال ثبت شد'
 
     ],
     questions:[],
@@ -87,11 +88,10 @@ export default new Vuex.Store({
     }
   },
   actions:{
-    validate_phone({ commit }, data){
+    validate_phone({ commit }){
       let context = this
       console.log(localStorage.getItem('token'),'token')
       commit('phone_validation_progress',true)
-      this.state.phone_number = data.phone_number;
       let request_data = new FormData();
       request_data.append('phone', this.state.phone_number);
       let config = {
@@ -135,7 +135,12 @@ export default new Vuex.Store({
       
       axios(config)
       .then(function (response) {
+        console.log(response.data.phone)
         context.state.questions = response.data.questions
+        if (response.data.phone !== undefined){
+          context.state.phone_number = response.data.phone
+          context.state.focus_index = 2
+        }
         commit('updateMessage')
 
       })
@@ -145,6 +150,7 @@ export default new Vuex.Store({
     },
     answer({commit},data){
       console.log(data)
+      let context = this
       var request_data = JSON.stringify({
         "answer": data.answer
       });
@@ -161,15 +167,25 @@ export default new Vuex.Store({
       axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        commit('answerr')
+        context.state.alert_text = context.state.success_messages[3]
+        context.state.alert_color = 'green'
+        context.state.show_alert=true   
+        commit('verified')
       })
       .catch(function (error) {
         console.log(error);
+        let stat = error.response.status;
+        context.state.alert_color= 'red'
+        if (stat == 400 || stat == 403)
+          context.state.alert_text = context.state.error_messages[4]
+        else
+          context.state.alert_text = context.state.error_messages[2]
+        context.state.show_alert=true
       });
       
 
     },
-    check_pin({ commit },data){
+    check_pin({ commit ,dispatch},data){
       let context = this
       console.log(data.code)
       let request_data = new FormData();
@@ -187,12 +203,11 @@ export default new Vuex.Store({
         context.state.alert_text = context.state.success_messages[1]
         context.state.alert_color = 'green'
         context.state.show_alert=true        
-        context.focus_index= context.focus_index + 1
         console.log(context.focus_index)
         let token = response.data.token
         console.log(token,'token')
         localStorage.setItem('token', token)
-
+        dispatch('fetch_poll_by_pk')
       commit('pin_progress',false)
 
 
