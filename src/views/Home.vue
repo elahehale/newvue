@@ -1,17 +1,22 @@
 <template>
-  <div>
+  <v-container>
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <!-- <div class="d-flex justify-center flex-row-reverse">
-        <card :index="0" style=" margin:10px;"></card>
-        <card :index="1" style=" margin:10px;"></card>
-        <card :index='2' style=" margin:10px;"></card>
-    </div> -->
+   
     <v-snackbar v-model="show_alert" :timeout="timeout" top rounded="pill" :color="$store.state.alert_color" elevation='0' text>
       <template >
         <div style='text-align:center'>{{ $store.state.alert_text }}</div>
       </template>
     </v-snackbar>
-    <div style="margin:0 auto; width:75%;">
+
+
+    <v-btn @click='logOut'>click for refresh</v-btn>
+    <v-container>
+    <v-row justify-md='end' justify='center'>
+     <img alt="Vue logo" src="../assets/logo.png" class='logo_image'>
+    </v-row>
+    <v-row>
+    <v-col md='9'>
+      <div style="padding:10px;">
     <VueSlickCarousel v-bind='slickSetting' style='height:500px'>
       <template style='height:500px;'>
       <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;"></card></div>
@@ -23,12 +28,12 @@
     </template>
     <template #prevArrow >
         <div style='align:left; position:reltive;'>
-        <img alt="Vue logo" src="../assets/logo.png" style="width:20px;">
+          <v-icon  large color="gray darken-2"  > mdi-arrow-left </v-icon>
         </div>
     </template>
     <template #nextArrow >
         <div style='align:left; position:reltive;'>
-        <img alt="Vue logo" src="../assets/logo.png" style="width:20px;">
+          <v-icon  large color="gray darken-2"  > mdi-arrow-right </v-icon>
         </div>
     </template>
     <!-- <template #customPaging > -->
@@ -38,8 +43,11 @@
         </div>
     </template>
     </VueSlickCarousel>
-    </div>
-  </div>
+      </div>
+    </v-col>
+    </v-row>
+    </v-container>
+  </v-container>
 </template>
 
 <script>
@@ -74,6 +82,11 @@ export default {
   mounted(){
           this.$store.dispatch('fetch_poll_by_pk')
 
+  },
+  methods:{
+    logOut(){
+      this.$store.commit('reset')
+    }
   },
   data: () => ({
     
@@ -118,8 +131,7 @@ export default {
   ]
 }
   }),
-  methods:{
-  }
+  
   
 }
 </script>
@@ -135,6 +147,7 @@ export default {
   margin-top: 60px;
 }
 .scroll-item{
+  padding:20px;
   text-align: center;
   height:500px;
  
@@ -147,5 +160,8 @@ export default {
         border:solid black 2px;
         border-radius:100%;
         transition: border 0.5s , background-color 0.5s,transform 0.5s;
+}
+.logo_image{
+  width:200px;
 }
 </style>

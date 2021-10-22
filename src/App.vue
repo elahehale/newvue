@@ -1,6 +1,8 @@
-<template>
-  <v-app>
+<template style='margin:0;'>
+  <v-app :style="{backgroundImage:`url(${require('@/assets/background.png')})`}">
     <v-main>
+    
+
       <router-view/>
     </v-main>
   </v-app>

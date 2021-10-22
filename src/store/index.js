@@ -46,8 +46,16 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    reset(store){
+      console.log("reset")
+      for (let index in store.questions){
+        store.questions[index].answer =''
+      }
+      localStorage.setItem('token','')
+      store.focus_index = 0
+    },
     answerr(){
-console.log('hi')
+      console.log('hi')
     },
     phone_validation_progress(store,data){
       store.phone_validation_in_progress = data
