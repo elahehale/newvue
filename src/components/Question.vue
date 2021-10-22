@@ -46,6 +46,8 @@ return {
       sendAnswer(){
           console.log(this.question)
           this.$store.dispatch('answer',{'pk':this.question.id , 'answer' : this.question.answer})
+          this.$emit('tonext');
+
       },
   setAnswer(){
           console.log(this.answer,'answerrr')

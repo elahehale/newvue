@@ -24,4 +24,7 @@ export default {
   src: local("Yekan"),
    url(./fonts/IRANYekanWebMedium.woff) format("truetype");
 }
+#app{
+  margin:0 !important;
+}
 </style>

@@ -30,6 +30,7 @@ export default {
       validate_phone(){
           this.$store.dispatch('validate_phone')
           this.loading=true;
+          this.$emit('tonext');
       }
   }
 }

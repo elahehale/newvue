@@ -1,11 +1,13 @@
 <template>
+
     <div class='container' v-bind:class="{ passed: index < $store.state.focus_index,
                                            onFocus: index == $store.state.focus_index,
                                            deactive: index > $store.state.focus_index}">
         <end-card v-if='index == $store.state.question_num +2'></end-card>
-        <phone-input v-else-if='index == 0'></phone-input>
-        <pin-input v-else-if='index == 1'></pin-input>
-        <question v-else :index='index'></question>
+        <phone-input v-else-if='index == 0' v-on:tonext="tonext"></phone-input>
+        <pin-input v-else-if='index == 1' v-on:tonext="tonext"></pin-input>
+        <question v-else :index='index' v-on:tonext="tonext"></question>
+        <div v-on:tonext="console.log('hi')"></div>
 
     </div>
 </template>
@@ -27,6 +29,11 @@ export default {
     PinInput,
     Question
     
+  },
+  methods:{
+    tonext(){
+      this.$emit('tonext')
+    }
   },
   mounted(){
     console.log(this.index)

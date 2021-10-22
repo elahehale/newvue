@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="width:100%">
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
    
     <v-snackbar v-model="show_alert" :timeout="timeout" top rounded="pill" :color="$store.state.alert_color" elevation='0' text>
@@ -9,21 +9,21 @@
     </v-snackbar>
 
     <v-container>
-    <v-row  justify='space-between'>
+    <v-row  justify='space-between' >
       <v-btn style="margin-top:10px;" icon x-large color='#FE0B6C' @click="logOut"><v-icon large dark>mdi-logout-variant</v-icon></v-btn>
       <img alt="Vue logo" src="../assets/logo.png" class='logo_image'>
 
     </v-row>
     <v-row>
     <v-col md='9'>
-      <div style="padding:10px;">
-    <VueSlickCarousel v-bind='slickSetting' style='height:500px'>
+      <v-container >
+    <VueSlickCarousel v-bind='slickSetting' style='height:500px' ref="carousel">
       <template style='height:500px;'>
-      <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;"></card></div>
-      <div class='scroll-item'><card :index="1" style="text-align:center; margin:10px;"></card></div>
-      <div class='scroll-item'><card :index='2' style="text-align:center; margin:0 auto;"></card></div>
-      <div class='scroll-item'><card :index='3' style="text-align:center; margin:0 auto;"></card></div>
-      <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;"></card></div>      
+      <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
+      <div class='scroll-item'><card :index="1" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
+      <div class='scroll-item'><card :index='2' style="text-align:center; margin:0 auto;" v-on:tonext='donext'></card></div>
+      <div class='scroll-item'><card :index='3' style="text-align:center; margin:0 auto;" v-on:tonext='donext'></card></div>
+      <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>      
     
     </template>
     <template #prevArrow >
@@ -43,8 +43,14 @@
         </div>
     </template>
     </VueSlickCarousel>
-      </div>
+      </v-container>
     </v-col>
+    <v-col md='3'>
+      <h3>انتخاب تو چیه؟</h3>
+      <v-container>
+        مگه کسی از نظر شما خبرداره؟ منظورم اینه اگر حرف حساب شما نوجوونا اینه که چرا کسی فیلم، موسیقی، گیم، کتاب و خلاصه محصولات مورد پسند ما رو تولید نمی کنه؛ خب طبیعتا یه دلیل بزرگش اینه که سلیقه شما رو نمی دونن! کشورهای دیگه به سلیقه نوجوونا جایزه هم می دن. ما هم می خوایم همین کار رو بکنیم. حالا تو با شرکت توی این نظرسنجی می تونی به خودت و بقیه نوجوونا کمک کنی که سلیقه شماها رو به گوش مسئولین و تولیدکنندگان محصولات فرهنگی برسونیم. خودتون رو جدی بگیرید. ما شما رو جدی گرفیتم.
+      </v-container>
+      </v-col>
     </v-row>
     </v-container>
   </v-container>
@@ -84,8 +90,13 @@ export default {
 
   },
   methods:{
+    donext(){
+      console.log('hi')
+      this.$refs.carousel.next()
+    },
     logOut(){
       this.$store.commit('reset')
+      this.$emit('tonext')
     }
   },
   data: () => ({
@@ -106,9 +117,9 @@ export default {
 
   "responsive": [
     {
-      "breakpoint": 1024,
+      "breakpoint": 1260,
       "settings": {
-        "slidesToShow": 3,
+        "slidesToShow": 2,
         "slidesToScroll": 1,
         "dots": true
       }
@@ -118,7 +129,6 @@ export default {
       "settings": {
         "slidesToShow": 1,
         "slidesToScroll": 1,
-        "initialSlide": 2
       }
     },
     {

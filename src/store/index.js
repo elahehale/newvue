@@ -7,6 +7,7 @@ Vue.use(Vuex,axios,VueAxios)
 export default new Vuex.Store({
   state: {
     phone_number:'',
+    code :'',
     count:0,
     base_url:"http://localhost:8000/api/",
     start_index:0,
@@ -15,7 +16,7 @@ export default new Vuex.Store({
     focus_index:0,
     validated_index:0,
     message:'1',
-    show_alert:true,
+    show_alert:false,
     aler_text:'hi',
     alert_color:'green',
 
@@ -185,12 +186,11 @@ export default new Vuex.Store({
       
 
     },
-    check_pin({ commit ,dispatch},data){
+    check_pin({ commit ,dispatch}){
       let context = this
-      console.log(data.code)
       let request_data = new FormData();
       request_data.append('phone', this.state.phone_number);
-      request_data.append('code', data.code);
+      request_data.append('code', context.state.code);
       commit('pin_progress',true)
       let config = {
         method: 'post',
