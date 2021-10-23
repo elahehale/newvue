@@ -15,7 +15,8 @@
                 placeholder=""
                 :length="5"
             /> -->
-            <input class='pin' type='text' maxlength='5'  v-model="$store.state.code" :disabled="$store.state.focus_index > 1" v-bind:class="{passed: $store.state.focus_index > 1}">
+            <input class='pin' type='text' maxlength='5'  v-on:keyup.enter='sendCode'
+            v-model="$store.state.code" :disabled="$store.state.focus_index > 1" v-bind:class="{passed: $store.state.focus_index > 1}">
 
         </div>
         <div style="position:relative ; margin-top:10px;">
@@ -47,10 +48,13 @@ export default {
   }),
   methods:{
       sendCode(){
-          this.$store.dispatch('check_pin')
-          this.$emit('tonext');
-
-        
+            this.$store.dispatch('check_pin').then(response => {
+            this.loading=true;
+            this.$emit('tonext');
+            console.log(response)
+        }, error => {
+            console.error(error)
+        })
       }
       ,setStyle(){
         

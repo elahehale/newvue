@@ -44,9 +44,13 @@ return {
   },
   methods:{
       sendAnswer(){
+        if ( this.question.answer == '')
+            this.$store.commit('empty_answer')
+        else{
           console.log(this.question)
           this.$store.dispatch('answer',{'pk':this.question.id , 'answer' : this.question.answer})
           this.$emit('tonext');
+        }
 
       },
   setAnswer(){

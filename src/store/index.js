@@ -19,7 +19,7 @@ export default new Vuex.Store({
     show_alert:false,
     aler_text:'hi',
     alert_color:'green',
-
+    loaded:false,
     phone_validation_in_progress:false,
     pin_in_progress:false,
     error_messages:[
@@ -27,7 +27,7 @@ export default new Vuex.Store({
         'کد وارد شده صحیح نمیباشد',
         'ارتباط با سرور قطع میباشد',
         'سوال های قبلی تایید نشده است',
-        'پاسخ شما ثبت نشدودقت کنید پاسخ خالی نباشد',
+        'دقت کنید پاسخ خالی نباشد',
     ],
     success_messages:[
       'کد تایید برای شما ارسال شد',
@@ -48,6 +48,12 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    empty_answer(store){
+      store.alert_text = store.error_messages[4]
+    
+      store.alert_color='red'
+      store.show_alert = true;
+    },
     reset(store){
       console.log("reset")
       for (let index in store.questions){
@@ -55,6 +61,8 @@ export default new Vuex.Store({
       }
       localStorage.setItem('token','')
       store.focus_index = 0
+      store.phone_number=''
+      store.code = ''
     },
     answerr(){
       console.log('hi')
@@ -90,6 +98,7 @@ export default new Vuex.Store({
   },
   actions:{
     validate_phone({ commit }){
+      return new Promise((resolve, reject) => {
       let context = this
       console.log(localStorage.getItem('token'),'token')
       commit('phone_validation_progress',true)
@@ -102,7 +111,7 @@ export default new Vuex.Store({
       };
       console.log(request_data)
       axios(config)
-      .then(function () {
+      .then(function (response) {
         context.state.alert_text = context.state.success_messages[0]
         context.state.alert_color = 'green'
         context.state.show_alert=true
@@ -110,6 +119,7 @@ export default new Vuex.Store({
         console.log(context.focus_index)
         commit('phone_validation_progress',false)
         commit('verified')
+        resolve(response);
       })
       .catch(function (error) {
         commit('phone_validation_progress',false)
@@ -120,9 +130,10 @@ export default new Vuex.Store({
         else
           context.state.alert_text = context.state.error_messages[2]
         context.state.show_alert=true
-
+        reject(error);
 
       });
+    })
     },
     fetch_poll_by_pk({commit}){
       let context = this
@@ -142,6 +153,7 @@ export default new Vuex.Store({
           context.state.phone_number = response.data.phone
           context.state.focus_index = 2
         }
+        context.state.loaded= true
         commit('updateMessage')
 
       })
@@ -187,6 +199,7 @@ export default new Vuex.Store({
 
     },
     check_pin({ commit ,dispatch}){
+      return new Promise((resolve, reject) => {
       let context = this
       let request_data = new FormData();
       request_data.append('phone', this.state.phone_number);
@@ -209,7 +222,7 @@ export default new Vuex.Store({
         localStorage.setItem('token', token)
         dispatch('fetch_poll_by_pk')
       commit('pin_progress',false)
-
+        resolve(response);
 
         commit('verified')
       })
@@ -218,13 +231,14 @@ export default new Vuex.Store({
 
         let stat = error.response.status;
         context.state.alert_color= 'red'
-        if (stat == 400)
+        if (stat == 400 || stat == 403)
           context.state.alert_text = context.state.error_messages[1]
         else
           context.state.alert_text = context.state.error_messages[2]
         context.state.show_alert=true
-
+        reject(error)
       });
+    })
     },
 
   },

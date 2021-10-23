@@ -1,4 +1,4 @@
-<template style='margin:0;'>
+<template >
   <v-app :style="{backgroundImage:`url(${require('@/assets/background.png')})`}">
     <v-main>
     
@@ -26,5 +26,6 @@ export default {
 }
 #app{
   margin:0 !important;
+  width:100%;
 }
 </style>

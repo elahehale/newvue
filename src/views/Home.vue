@@ -1,5 +1,5 @@
-<template>
-  <v-container style="width:100%">
+<template >
+  <v-container  >
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
    
     <v-snackbar v-model="show_alert" :timeout="timeout" top rounded="pill" :color="$store.state.alert_color" elevation='0' text>
@@ -15,30 +15,30 @@
 
     </v-row>
     <v-row>
-    <v-col md='9'>
+    <v-col md='9' style="margin:0px;">
       <v-container >
-    <VueSlickCarousel v-bind='slickSetting' style='height:500px' ref="carousel" @beforeChange='slide_change'>
-      <template style='height:500px;'>
-      <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
-      <div class='scroll-item'><card :index="1" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
-      <div class='scroll-item'><card :index='2' style="text-align:center; margin:0 auto;" v-on:tonext='donext'></card></div>
-      <div class='scroll-item'><card :index='3' style="text-align:center; margin:0 auto;" v-on:tonext='donext'></card></div>
-      <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>      
+    <VueSlickCarousel v-bind='slickSetting' style='height:500px' ref="carousel" @beforeChange='slide_change' v-if='$store.state.loaded'>
+      <!-- <template style='height:500px;'>
+      <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;" v-on:tonext='next_slide'></card></div>
+      <div class='scroll-item'><card :index="1" style="text-align:center; margin:10px;" v-on:tonext='next_slide'></card></div>
+      <div class='scroll-item'><card :index='2' style="text-align:center; margin:0 auto;" v-on:tonext='next_slide'></card></div>
+      <div class='scroll-item'><card :index='3' style="text-align:center; margin:0 auto;" v-on:tonext='next_slide'></card></div>
+      <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;" v-on:tonext='next_slide'></card></div>      
     
-    </template>
-    <!-- <template style='height:500px;'>
-      <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
-      <div class='scroll-item'><card :index="1" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
-      <div v-for='(question,index) in $store.state.questions' class='scroll-item' :key="index"><card :index="index + 2" style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>
-      <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;" v-on:tonext='donext'></card></div>      
     </template> -->
+    <template style='height:500px;'>
+      <div class='scroll-item'><card :index="0" style="text-align:center; margin:10px;" v-on:tonext='next_slide' ></card></div>
+      <div class='scroll-item'><card :index="1" style="text-align:center; margin:10px;" v-on:tonext='next_slide'></card></div>
+      <div v-for='(question,index) in $store.state.questions' class='scroll-item' :key="index"><card :index="index + 2" style="text-align:center; margin:10px;" v-on:tonext='next_slide'></card></div>
+      <div class='scroll-item'><card :index='4' style="text-align:center; margin:10px;" v-on:tonext='next_slide'></card></div>      
+    </template>
     <template #prevArrow >
-        <div style='align:left; position:reltive;' >
+        <div >
           <v-icon  large color="gray darken-2"  > mdi-arrow-left </v-icon>
         </div>
     </template>
     <template #nextArrow >
-        <div style='align:left; position:reltive;' >
+        <div  >
           <v-icon  large color="gray darken-2"  > mdi-arrow-right </v-icon>
         </div>
     </template>
@@ -66,7 +66,7 @@
     </v-col>
     <v-col md='3'>
       <h3>انتخاب تو چیه؟</h3>
-      <v-container>
+      <v-container class='home_text'>
         مگه کسی از نظر شما خبرداره؟ منظورم اینه اگر حرف حساب شما نوجوونا اینه که چرا کسی فیلم، موسیقی، گیم، کتاب و خلاصه محصولات مورد پسند ما رو تولید نمی کنه؛ خب طبیعتا یه دلیل بزرگش اینه که سلیقه شما رو نمی دونن! کشورهای دیگه به سلیقه نوجوونا جایزه هم می دن. ما هم می خوایم همین کار رو بکنیم. حالا تو با شرکت توی این نظرسنجی می تونی به خودت و بقیه نوجوونا کمک کنی که سلیقه شماها رو به گوش مسئولین و تولیدکنندگان محصولات فرهنگی برسونیم. خودتون رو جدی بگیرید. ما شما رو جدی گرفیتم.
       </v-container>
       </v-col>
@@ -113,7 +113,7 @@ export default {
   },
   methods:{
     
-    donext(){
+    next_slide(){
       console.log('hi')
       this.clicked++
       this.$refs.carousel.next()
@@ -205,6 +205,12 @@ export default {
   box-shadow:0 0 0px 2px  white inset;
   background-color:white;
 }
+.slick-next{
+  right:-15px !important;
+}
+.slick-prev{
+  right:15px;
+}
 .btn-title {
   width: 100px;
   transform: rotate(-90deg);
@@ -213,6 +219,12 @@ export default {
     left: -25px;
     top: 40px;
 
+}
+.home_text{
+  word-wrap: break-word;
+  direction:rtl;
+  text-justify: inter-word;
+  text-align:right;
 }
 .number-container {
   cursor: pointer;
